@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: test
+  labels:
+    app: test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: test
+  template:
+    metadata:
+      name: test
+      labels:
+        app: test
+    spec:
+      containers:
+        - name: test
+          image: ghcr.io/zgamelogic/test:master
+          imagePullPolicy: Always
+          env:
+            - name: TZ
+              value: "America/Chicago"
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 15
+            periodSeconds: 30
+      restartPolicy: Always
+      imagePullSecrets:
+        - name: ghcr-secret
