@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: test
+  name: golem
   labels:
-    app: test
+    app: golem
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: test
+      app: golem
   template:
     metadata:
-      name: test
+      name: golem
       labels:
-        app: test
+        app: golem
     spec:
       containers:
-        - name: test
-          image: ghcr.io/zgamelogic/test:master
+        - name: golem
+          image: ghcr.io/zgamelogic/golem:master
           imagePullPolicy: Always
           env:
             - name: TZ
