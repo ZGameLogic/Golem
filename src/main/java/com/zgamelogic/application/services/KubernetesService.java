@@ -27,11 +27,5 @@ public class KubernetesService {
             if(routes.contains(label.toLowerCase())) return;
             route53Service.addCnameRecord(label);
         });
-        client.network().v1().ingresses().inNamespace("dev").list().getItems().forEach(service -> {
-            String label = service.getMetadata().getLabels().getOrDefault("route53", null);
-            if(label == null) return;
-            if(routes.contains(label.toLowerCase())) return;
-            route53Service.addCnameRecord(label);
-        });
     }
 }
