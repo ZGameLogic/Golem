@@ -10,6 +10,7 @@ import software.amazon.awssdk.services.route53.model.*;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.Scanner;
 
 @Slf4j
@@ -71,5 +72,71 @@ public class Route53Service {
 
             log.info("Updated A record to new IP: {}", currentIp);
         }
+    }
+
+    public List<String> getCnameRecords() {
+        String hostedZoneId = "Z10458543LUY6QMAE4J12";
+        List<String> results = new java.util.ArrayList<>();
+
+        String nextName = null;
+        RRType nextType = null;
+        boolean truncated;
+
+        do {
+            ListResourceRecordSetsRequest.Builder reqBuilder = ListResourceRecordSetsRequest.builder()
+                .hostedZoneId(hostedZoneId)
+                .maxItems("100");
+
+            if (nextName != null) {
+                reqBuilder.startRecordName(nextName).startRecordType(nextType);
+            }
+
+            ListResourceRecordSetsResponse resp = route53Client.listResourceRecordSets(reqBuilder.build());
+
+            for (ResourceRecordSet rrs : resp.resourceRecordSets()) {
+                if (rrs.type() == RRType.CNAME) {
+                    String name = rrs.name();
+                    results.add(name);
+                }
+            }
+
+            truncated = resp.isTruncated();
+            if (truncated) {
+                nextName = resp.nextRecordName();
+                nextType = resp.nextRecordType();
+            } else {
+                nextName = null;
+                nextType = null;
+            }
+        } while (truncated);
+
+        return results;
+    }
+
+    public void addCnameRecord(String prefix) {
+        String hostedZoneId = "Z10458543LUY6QMAE4J12";
+
+        ResourceRecordSet recordSet = ResourceRecordSet.builder()
+            .name(prefix + ".zgamelogic.com")
+            .type(RRType.CNAME)
+            .ttl(300L)
+            .resourceRecords(ResourceRecord.builder().value("zgamelogic.com").build())
+            .build();
+
+        Change change = Change.builder()
+            .action(ChangeAction.UPSERT)
+            .resourceRecordSet(recordSet)
+            .build();
+
+        ChangeBatch changeBatch = ChangeBatch.builder()
+            .changes(change)
+            .build();
+
+        ChangeResourceRecordSetsRequest request = ChangeResourceRecordSetsRequest.builder()
+            .hostedZoneId(hostedZoneId)
+            .changeBatch(changeBatch)
+            .build();
+
+        route53Client.changeResourceRecordSets(request);
     }
 }
