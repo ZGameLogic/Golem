@@ -15,6 +15,7 @@ spec:
       labels:
         app: golem
     spec:
+      serviceAccountName: golem-sa
       containers:
         - name: golem
           image: ghcr.io/zgamelogic/golem:master
