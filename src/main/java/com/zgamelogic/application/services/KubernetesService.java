@@ -36,7 +36,7 @@ public class KubernetesService {
     public void updateServices() {
         List<String> routes = route53Service.getCnameRecords().stream().map(s -> s.split("\\.")[0].toLowerCase()).toList();
         KubernetesClient client = new KubernetesClientBuilder().build();
-        client.network().v1().ingresses().inNamespace("default").list().getItems().forEach(service -> {
+        client.network().v1().ingresses().inAnyNamespace().list().getItems().forEach(service -> {
             String label = service.getMetadata().getLabels().getOrDefault("route53", null);
             if(label == null) return;
             if(routes.contains(label.toLowerCase())) return;
