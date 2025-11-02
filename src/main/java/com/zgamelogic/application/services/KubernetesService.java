@@ -17,6 +17,21 @@ public class KubernetesService {
     private final Route53Service route53Service;
 
     @PostConstruct
+    public void init(){
+        KubernetesClient client = new KubernetesClientBuilder().build();
+        client.nodes().list().getItems().forEach(node -> {
+            System.out.println("Name: " + node.getMetadata().getName());
+            System.out.println("Labels: " + node.getMetadata().getLabels());
+            System.out.println("Capacity: " + node.getStatus().getCapacity());
+            System.out.println("Allocatable: " + node.getStatus().getAllocatable());
+            System.out.println("Conditions: " + node.getStatus().getConditions());
+            System.out.println("Addresses: " + node.getStatus().getAddresses());
+            System.out.println("Kubelet Version: " + node.getStatus().getNodeInfo().getKubeletVersion());
+            System.out.println("-----------------------------------");
+        });
+    }
+
+    @PostConstruct
     @Scheduled(cron = "0 */15 * * * *")
     public void updateServices() {
         List<String> routes = route53Service.getCnameRecords().stream().map(s -> s.split("\\.")[0].toLowerCase()).toList();
