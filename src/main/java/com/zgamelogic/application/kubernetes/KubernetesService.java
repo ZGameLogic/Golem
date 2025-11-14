@@ -1,5 +1,7 @@
-package com.zgamelogic.application.services;
+package com.zgamelogic.application.kubernetes;
 
+import com.zgamelogic.application.services.Route53Service;
+import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.networking.v1.Ingress;
 import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.Watcher;
@@ -9,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collection;
 import java.util.List;
 
 @Slf4j
@@ -58,5 +61,9 @@ public class KubernetesService {
                 updateServices();
             }
         });
+    }
+
+    public List<Pod> getAllNodes(){
+        return client.pods().inNamespace("default").list().getItems();
     }
 }
