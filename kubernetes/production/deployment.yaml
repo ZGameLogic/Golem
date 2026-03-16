@@ -18,7 +18,7 @@ spec:
       serviceAccountName: golem-sa
       containers:
         - name: golem
-          image: ghcr.io/zgamelogic/golem:master
+          image: ghcr.io/zgamelogic/golem:production
           imagePullPolicy: Always
           env:
             - name: TZ
