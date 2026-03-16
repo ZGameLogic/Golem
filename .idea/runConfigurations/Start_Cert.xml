@@ -1,7 +1,9 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Start Cert" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="cert" />
-    <module name="spring-template" />
+    <option name="ALTERNATIVE_JRE_PATH" value="openjdk-25" />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <module name="golem" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.zgamelogic.application.App" />
     <extension name="coverage">
       <pattern>
