@@ -1,4 +1,4 @@
-name: Deploy Oni
+name: Deploy Golem
 
 on:
   push:
