@@ -21,23 +21,6 @@ public class KubernetesService {
     private final KubernetesClient client;
 
     @PostConstruct
-    public void init(){
-//        client.pods().inAnyNamespace().list().getItems().forEach(pod -> {
-//            System.out.println(pod.getMetadata().getName() + " " + pod.getStatus());
-//        });
-        client.nodes().list().getItems().forEach(node -> {
-            System.out.println("Name: " + node.getMetadata().getName());
-            System.out.println("Labels: " + node.getMetadata().getLabels());
-            System.out.println("Capacity: " + node.getStatus().getCapacity());
-            System.out.println("Allocatable: " + node.getStatus().getAllocatable());
-            System.out.println("Conditions: " + node.getStatus().getConditions());
-            System.out.println("Addresses: " + node.getStatus().getAddresses());
-            System.out.println("Kubelet Version: " + node.getStatus().getNodeInfo().getKubeletVersion());
-            System.out.println("-----------------------------------");
-        });
-    }
-
-    @PostConstruct
     public void updateServices() {
         client.network().v1().ingresses().inAnyNamespace().watch(new Watcher<>() {
             @Override
