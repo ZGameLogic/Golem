@@ -69,7 +69,6 @@ public class Route53Service {
                 .build();
 
             route53Client.changeResourceRecordSets(updateRequest);
-
             log.info("Updated A record to new IP: {}", currentIp);
         }
     }
