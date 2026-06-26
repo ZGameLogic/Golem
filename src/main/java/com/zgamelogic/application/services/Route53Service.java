@@ -26,8 +26,13 @@ public class Route53Service {
 
         // 1. Get current public IP
         String currentIp;
-        Scanner s = new Scanner(new URL("https://checkip.amazonaws.com").openStream(), StandardCharsets.UTF_8);
-        currentIp = s.next().trim();
+        try {
+            Scanner s = new Scanner(new URL("https://checkip.amazonaws.com").openStream(), StandardCharsets.UTF_8);
+            currentIp = s.next().trim();
+        } catch(Exception e) {
+            log.error("Error while trying to fetch IP: {}", e.getMessage());
+            return;
+        }
 
         // 2. Fetch current Route 53 record
         ListResourceRecordSetsResponse response = route53Client.listResourceRecordSets(
